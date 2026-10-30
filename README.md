@@ -112,14 +112,10 @@ This is a static frontend that copies the look of GitHub's Pull Request page. It
 ## 6. Prompts we gave the AI
 
 1. Build the PR review page frontend. Make the layout, colours, and fonts the same as the example screenshots. Add all mandatory features. Use best practices.
-2. Push it to GitHub.
-3. Clarify: signed into Kiro as `sidramusheer` but want to push to `msidra`.
-4. Write this README for the CPS845 analysis.
-5. Add all the features listed in our backlog and sprint files.
-6. Change the usernames to the personas from our user stories (Jane, John, Bob).
-7. Give Jane, John, and Bob profile pictures and rename the repo.
-8. Fix the bold text and make the sign-in errors match real GitHub.
-9. Update this README in short bullet points.
+2. Add all the features listed in our backlog and sprint files.
+3. Use personas from our user stories (Jane, John, Bob).
+4. Give Jane, John, and Bob profile pictures.
+5. Make the sign-in errors match real GitHub.
 
 **What we noticed:** our prompts were high-level ("make it the same", "add all features"). The AI had to turn that into concrete work by reading our screenshots and backlog files.
 
@@ -152,7 +148,6 @@ This is a static frontend that copies the look of GitHub's Pull Request page. It
 ## 9. Known limits
 
 - Static mock only — buttons like Comment, Revert, and Restore branch are for show.
-- Not pushed to GitHub yet: pushing to `msidra` was blocked (403) because our git login is `sidramusheer`, which has no write access. The commit exists locally.
 - Accessibility was built in but not formally tested with assistive tools.
 - "Works in Chrome and Safari with no console errors" (our Definition of Done) still needs a manual browser check.
 
