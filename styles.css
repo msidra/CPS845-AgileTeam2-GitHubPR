@@ -559,6 +559,15 @@ svg { fill: currentColor; vertical-align: text-bottom; }
   background: var(--bg-subtle); border: 1px solid var(--border-default);
   border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
 }
+/* GitHub-style sign-in error banner */
+.signin__banner {
+  width: 100%;
+  background: #442b2d; border: 1px solid #a74044;
+  color: #ffdcd7; font-size: 13px;
+  padding: 10px 16px; border-radius: var(--radius);
+  margin: 0 0 16px; text-align: center;
+}
+
 .field { margin-bottom: 16px; }
 .field:last-of-type { margin-bottom: 20px; }
 .field__label-row { display: flex; align-items: center; justify-content: space-between; }
@@ -656,3 +665,10 @@ svg { fill: currentColor; vertical-align: text-bottom; }
 /* conversation empty + new comment avatar placeholder */
 .conversation-empty { padding: 16px 0; }
 .timeline-comment__avatar .gh-avatar { width: 40px; height: 40px; }
+
+/* Inline avatar alignment in the PR list meta line */
+.prlist__byavatar { vertical-align: middle; margin: 0 2px; }
+.prlist__meta .link-user { vertical-align: middle; }
+
+/* Header avatar is now a real <img> */
+.gh-header__user .gh-avatar { border: 0; }

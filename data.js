@@ -7,23 +7,23 @@
 window.APP_DATA = {
   // Known users (prototype only — passwords are NOT real credentials).
   users: [
-    { username: "sidramusheer", password: "password123", name: "Sidra Musheer" },
-    { username: "vedula-narayana", password: "password123", name: "Vedula Narayana" },
-    { username: "kevinkhuu", password: "password123", name: "Kevin Khuu" }
+    { username: "jane", password: "password123", name: "Jane" },   // author persona
+    { username: "john", password: "password123", name: "John" },   // reviewer persona
+    { username: "bob", password: "password123", name: "Bob" }      // new-contributor persona
   ],
 
   pullRequests: [
     {
       id: 8,
       title: "S1 FR-1: Data Foundation (ingestion + mapping + data-quality)",
-      author: "sidramusheer",
+      author: "jane",
       status: "merged",                 // open | merged | closed
       sourceBranch: "s1/fr-1-data-foundation",
       targetBranch: "main",
-      mergedBy: "vedula-narayana",
+      mergedBy: "john",
       commitsCount: 10,
       createdAt: "2 days ago",
-      reviewers: ["vedula-narayana"],   // US-1.3: only shown to these reviewers
+      reviewers: ["john"],              // US-1.3: only shown to these reviewers
       approvals: 1,
       diff: { filesChanged: 58, additions: 1733, deletions: 3 },
       description:
@@ -55,25 +55,25 @@ window.APP_DATA = {
       ],
       // US-3.1 — conversation, oldest to newest
       conversation: [
-        { type: "comment", author: "sidramusheer", time: "2 days ago",
+        { type: "comment", author: "jane", time: "2 days ago",
           body: "Opened this PR for FR-1. Ready for review when you have a moment." },
-        { type: "event", actor: "sidramusheer", time: "2 days ago", text: "added 8 commits" },
-        { type: "event", actor: "sidramusheer", time: "2 days ago", text: "added 2 commits" },
-        { type: "comment", author: "vedula-narayana", time: "2 days ago",
+        { type: "event", actor: "jane", time: "2 days ago", text: "added 8 commits" },
+        { type: "event", actor: "jane", time: "2 days ago", text: "added 2 commits" },
+        { type: "comment", author: "john", time: "2 days ago",
           body: "Looks good. Approving — nice work on the fail-closed semantics." },
-        { type: "event", actor: "vedula-narayana", time: "2 days ago", text: "merged this pull request" }
+        { type: "event", actor: "john", time: "2 days ago", text: "merged this pull request" }
       ]
     },
     {
       id: 12,
       title: "US-2.3: Files changed summary bar",
-      author: "kevinkhuu",
+      author: "bob",
       status: "open",
       sourceBranch: "feat/files-changed-summary",
       targetBranch: "main",
       commitsCount: 3,
       createdAt: "5 hours ago",
-      reviewers: ["sidramusheer"],
+      reviewers: ["john"],
       approvals: 0,
       diff: { filesChanged: 4, additions: 96, deletions: 12 },
       description:
@@ -89,20 +89,20 @@ window.APP_DATA = {
         { name: "CI / unit-tests", status: "pending" }
       ],
       conversation: [
-        { type: "comment", author: "kevinkhuu", time: "5 hours ago",
+        { type: "comment", author: "bob", time: "5 hours ago",
           body: "First pass at the summary bar. Numbers are wired to the sample data." }
       ]
     },
     {
       id: 15,
       title: "US-1.2: Sign-in error messaging",
-      author: "vedula-narayana",
+      author: "bob",
       status: "closed",
       sourceBranch: "feat/signin-errors",
       targetBranch: "main",
       commitsCount: 2,
       createdAt: "1 day ago",
-      reviewers: ["sidramusheer"],
+      reviewers: ["jane"],
       approvals: 0,
       diff: { filesChanged: 2, additions: 61, deletions: 0 },
       description: "",   // demonstrates "No description provided" (US-2.2)

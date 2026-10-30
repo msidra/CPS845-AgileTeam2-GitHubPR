@@ -20,6 +20,7 @@
   var passwordEl = document.getElementById("password");
   var usernameErr = document.getElementById("username-error");
   var passwordErr = document.getElementById("password-error");
+  var banner = document.getElementById("signin-banner");
 
   function showError(inputEl, errEl, message) {
     errEl.textContent = message;
@@ -31,41 +32,56 @@
     errEl.hidden = true;
     inputEl.classList.remove("field__input--error");
   }
+  // GitHub-style red banner above the form (used for "Incorrect username or password").
+  function showBanner(message) {
+    banner.textContent = message;
+    banner.hidden = false;
+  }
+  function clearBanner() {
+    banner.textContent = "";
+    banner.hidden = true;
+  }
 
-  // Clear a field's error as soon as the user edits it.
-  usernameEl.addEventListener("input", function () { clearError(usernameEl, usernameErr); });
-  passwordEl.addEventListener("input", function () { clearError(passwordEl, passwordErr); });
+  // Clear errors as soon as the user edits a field.
+  usernameEl.addEventListener("input", function () { clearError(usernameEl, usernameErr); clearBanner(); });
+  passwordEl.addEventListener("input", function () { clearError(passwordEl, passwordErr); clearBanner(); });
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     clearError(usernameEl, usernameErr);
     clearError(passwordEl, passwordErr);
+    clearBanner();
 
     var username = usernameEl.value.trim();
     var password = passwordEl.value;          // US-1.2: username is preserved (never cleared)
     var ok = true;
 
-    // US-1.2: empty field names the missing field.
+    // US-1.2: empty field names the missing field (field-level validation first).
     if (!username) { showError(usernameEl, usernameErr, "Username or email address is required"); ok = false; }
-    if (!password) { showError(passwordEl, passwordErr, "Password is required"); ok = false; }
-    else if (password.length < 8) {
-      // US-1.2: exact required wording.
-      showError(passwordEl, passwordErr, "Password must be at least 8 characters");
-      ok = false;
+    if (!password) {
+      showError(passwordEl, passwordErr, "Password is required"); ok = false;
+    } else if (password.length < 8) {
+      // US-1.2: exact required wording for the client-side length rule.
+      showError(passwordEl, passwordErr, "Password must be at least 8 characters"); ok = false;
     }
     if (!ok) return;
 
-    // Match against known users.
+    // Credential check against known users.
     var data = window.APP_DATA || { users: [] };
-    var user = data.users.filter(function (u) {
-      return u.username === username && u.password === password;
-    })[0];
+    var byName = data.users.filter(function (u) { return u.username === username; })[0];
 
-    if (!user) {
-      // Incorrect credentials — keep the username, GitHub-style generic message.
-      showError(passwordEl, passwordErr, "Incorrect username or password.");
+    if (!byName) {
+      // Username not found. Real GitHub does not reveal which field is wrong
+      // (anti username-enumeration); it shows one banner: "Incorrect username or password."
+      showBanner("Incorrect username or password.");
       return;
     }
+    if (byName.password !== password) {
+      // Valid username, wrong password — you asked for a clear "Invalid password."
+      showError(passwordEl, passwordErr, "Invalid password.");
+      return;
+    }
+    var user = byName;
 
     // US-1.1 + US-1.3: record session and go straight to the PR list.
     Auth.signIn(user.username, user.name);

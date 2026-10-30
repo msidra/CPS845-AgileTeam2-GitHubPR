@@ -43,7 +43,8 @@
           Common.statusBadge(pr.status) +
           '<div class="prlist__meta">' +
             '#' + pr.id + ' opened ' + Common.escapeHtml(pr.createdAt) +
-            ' by <span class="link-user">' + Common.escapeHtml(pr.author) + '</span>' +
+            ' by ' + Common.avatar(pr.author, "gh-avatar--xs prlist__byavatar") +
+            ' <span class="link-user">' + Common.escapeHtml(pr.author) + '</span>' +
             ' · <span class="branch-ref">' + Common.escapeHtml(pr.sourceBranch) + '</span>' +
             ' &rarr; <span class="branch-ref">' + Common.escapeHtml(pr.targetBranch) + '</span>' +
           '</div>' +

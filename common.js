@@ -14,24 +14,84 @@ window.Common = (function () {
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  /* Minimal, safe markdown: escapes first, then headings / bold / code / lists.
-     Preserves paragraphs and line breaks (US-2.2). */
+  /* ------------------------------ Avatars ------------------------------
+     Generates a self-contained SVG data-URI avatar (initials on a colour
+     derived from the username) so profile pictures render with no external
+     image dependency. */
+  var AVATAR_COLORS = ["#1f6feb", "#8957e5", "#2ea043", "#bf8700", "#db61a2", "#0969da"];
+
+  function avatarColor(name) {
+    var h = 0;
+    for (var i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+    return AVATAR_COLORS[h % AVATAR_COLORS.length];
+  }
+
+  function initials(name) {
+    var parts = String(name).trim().split(/[\s._-]+/).filter(Boolean);
+    if (parts.length === 0) return "?";
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  /* Returns a data: URI for an SVG avatar. */
+  function avatarUri(name) {
+    var bg = avatarColor(name);
+    var txt = initials(name);
+    var svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">' +
+      '<rect width="64" height="64" rx="32" fill="' + bg + '"/>' +
+      '<text x="32" y="33" font-family="-apple-system,Segoe UI,Helvetica,Arial,sans-serif" ' +
+      'font-size="26" font-weight="600" fill="#ffffff" text-anchor="middle" ' +
+      'dominant-baseline="central">' + txt + '</text></svg>';
+    return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+  }
+
+  /* Returns an <img> avatar element markup for a username, with the display
+     name used for initials when available in APP_DATA. */
+  function avatar(username, sizeClass) {
+    var data = window.APP_DATA || { users: [] };
+    var u = (data.users || []).filter(function (x) { return x.username === username; })[0];
+    var displayName = u ? u.name : username;
+    var cls = "gh-avatar" + (sizeClass ? " " + sizeClass : "");
+    return '<img class="' + cls + '" src="' + avatarUri(displayName) + '" alt="' +
+      escapeHtml(username) + '" />';
+  }
+
+  /* Minimal, safe markdown parser (line-based so headings, lists and
+     paragraphs render independently like GitHub does). Escapes first, then
+     applies inline code and bold. Preserves paragraphs/line breaks (US-2.2).
+     Only text explicitly marked with ## / ### / ** becomes a heading/bold;
+     normal prose stays regular weight. */
   function renderMarkdown(src) {
-    var html = escapeHtml(src);
-    html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
-    html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-    return html.split(/\n{2,}/).map(function (block) {
-      if (/^## /.test(block)) return "<h2>" + block.slice(3) + "</h2>";
-      if (/^### /.test(block)) return "<h3>" + block.slice(4) + "</h3>";
-      // bullet list
-      if (/^- /.test(block)) {
-        var items = block.split(/\n/).map(function (line) {
-          return "<li>" + line.replace(/^- /, "") + "</li>";
-        }).join("");
-        return "<ul>" + items + "</ul>";
+    var lines = escapeHtml(src).split(/\n/);
+    var out = [];
+    var para = [];     // buffer for consecutive plain-text lines
+    var list = [];     // buffer for consecutive list items
+
+    function inline(text) {
+      return text
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    }
+    function flushPara() {
+      if (para.length) { out.push("<p>" + para.map(inline).join("<br>") + "</p>"); para = []; }
+    }
+    function flushList() {
+      if (list.length) {
+        out.push("<ul>" + list.map(function (i) { return "<li>" + inline(i) + "</li>"; }).join("") + "</ul>");
+        list = [];
       }
-      return "<p>" + block.replace(/\n/g, "<br>") + "</p>";
-    }).join("");
+    }
+
+    lines.forEach(function (line) {
+      if (/^### /.test(line)) { flushPara(); flushList(); out.push("<h3>" + inline(line.slice(4)) + "</h3>"); }
+      else if (/^## /.test(line)) { flushPara(); flushList(); out.push("<h2>" + inline(line.slice(3)) + "</h2>"); }
+      else if (/^- /.test(line)) { flushPara(); list.push(line.slice(2)); }
+      else if (line.trim() === "") { flushPara(); flushList(); }
+      else { flushList(); para.push(line); }
+    });
+    flushPara(); flushList();
+    return out.join("");
   }
 
   var STATUS = {
@@ -65,9 +125,9 @@ window.Common = (function () {
           '<svg height="32" viewBox="0 0 16 16" width="32" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>' +
         '</a>' +
         '<nav class="gh-breadcrumb" aria-label="Repository">' +
-          '<a href="prs.html" class="gh-breadcrumb__owner">Lactalis-Canada</a>' +
+          '<a href="prs.html" class="gh-breadcrumb__owner">agile-team-2</a>' +
           '<span class="gh-breadcrumb__sep">/</span>' +
-          '<a href="prs.html" class="gh-breadcrumb__repo">customer-demand-forecasting</a>' +
+          '<a href="prs.html" class="gh-breadcrumb__repo">github-pr-review</a>' +
         '</nav>' +
       '</div>' +
       '<div class="gh-header__right">' +
@@ -77,7 +137,7 @@ window.Common = (function () {
         '</div>' +
         (user
           ? '<span class="gh-header__user" title="Signed in">' +
-              '<span class="gh-avatar gh-avatar--sm" aria-hidden="true"></span>' +
+              avatar(user.username, "gh-avatar--sm") +
               '<span class="gh-header__username">' + name + '</span>' +
             '</span>' +
             '<button class="btn btn--sm" id="signout-btn">Sign out</button>'
@@ -96,6 +156,7 @@ window.Common = (function () {
 
   return {
     escapeHtml: escapeHtml, renderMarkdown: renderMarkdown,
-    statusBadge: statusBadge, renderHeader: renderHeader
+    statusBadge: statusBadge, renderHeader: renderHeader,
+    avatar: avatar, avatarUri: avatarUri
   };
 })();

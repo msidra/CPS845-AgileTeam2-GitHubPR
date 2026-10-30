@@ -78,7 +78,7 @@
 
   var timelineHtml =
     '<article class="timeline-comment">' +
-      '<span class="timeline-comment__avatar"><span class="gh-avatar"></span></span>' +
+      '<span class="timeline-comment__avatar">' + Common.avatar(pr.author) + '</span>' +
       '<div class="comment-box">' +
         '<div class="comment-box__header">' +
           '<span class="comment-box__meta"><a href="#" class="link-user">' + esc(pr.author) +
@@ -101,7 +101,7 @@
   // US-3.2: add-comment form.
   timelineHtml +=
     '<article class="timeline-comment timeline-comment--new">' +
-      '<span class="timeline-comment__avatar"><span class="gh-avatar"></span></span>' +
+      '<span class="timeline-comment__avatar">' + Common.avatar(user.username) + '</span>' +
       '<form class="comment-form" id="comment-form">' +
         '<div class="comment-form__header">Add a comment</div>' +
         '<div class="comment-form__body">' +
@@ -120,7 +120,7 @@
   function renderConversationEntry(entry) {
     if (entry.type === "comment") {
       return '<article class="timeline-comment">' +
-        '<span class="timeline-comment__avatar"><span class="gh-avatar"></span></span>' +
+        '<span class="timeline-comment__avatar">' + Common.avatar(entry.author) + '</span>' +
         '<div class="comment-box">' +
           '<div class="comment-box__header">' +
             '<span class="comment-box__meta"><a href="#" class="link-user">' + esc(entry.author) +
@@ -249,7 +249,7 @@
         (pr.reviewers.length
           ? pr.reviewers.map(function (r) {
               return '<div class="reviewer-row"><span class="reviewer-row__user">' +
-                '<span class="gh-avatar gh-avatar--xs"></span> <a href="#" class="link-user">' + esc(r) + '</a></span>' +
+                Common.avatar(r, "gh-avatar--xs") + ' <a href="#" class="link-user">' + esc(r) + '</a></span>' +
                 (pr.approvals >= 1 ? '<span class="reviewer-row__status reviewer-row__status--approved" title="Approved">&#10003;</span>' : '') +
               '</div>';
             }).join("")
