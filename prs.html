@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" data-color-mode="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pull requests · customer-demand-forecasting</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="logged-in">
+  <header class="gh-header" role="banner" id="app-header"></header>
+
+  <nav class="gh-reponav" aria-label="Repository">
+    <ul class="gh-reponav__list">
+      <li><a href="#" class="gh-reponav__item">Code</a></li>
+      <li><a href="#" class="gh-reponav__item">Issues</a></li>
+      <li><a href="prs.html" class="gh-reponav__item gh-reponav__item--active">Pull requests</a></li>
+      <li><a href="#" class="gh-reponav__item">Actions</a></li>
+      <li><a href="#" class="gh-reponav__item">Projects</a></li>
+      <li><a href="#" class="gh-reponav__item">Insights</a></li>
+    </ul>
+  </nav>
+
+  <main class="gh-main" id="start-of-content">
+    <div class="prlist">
+      <div class="prlist__header">
+        <h1 class="prlist__title">Pull requests for your review</h1>
+        <p class="prlist__subtitle" id="prlist-subtitle"></p>
+      </div>
+      <ul class="prlist__items" id="prlist-items"></ul>
+      <p class="prlist__empty" id="prlist-empty" hidden>No pull requests are waiting for your review.</p>
+    </div>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="auth.js"></script>
+  <script src="common.js"></script>
+  <script src="prs.js"></script>
+</body>
+</html>

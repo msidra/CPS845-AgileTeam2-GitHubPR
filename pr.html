@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" data-color-mode="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pull Request · customer-demand-forecasting</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="logged-in">
+  <header class="gh-header" role="banner" id="app-header"></header>
+
+  <nav class="gh-reponav" aria-label="Repository">
+    <ul class="gh-reponav__list">
+      <li><a href="#" class="gh-reponav__item">Code</a></li>
+      <li><a href="#" class="gh-reponav__item">Issues</a></li>
+      <li><a href="prs.html" class="gh-reponav__item gh-reponav__item--active">Pull requests</a></li>
+      <li><a href="#" class="gh-reponav__item">Actions</a></li>
+      <li><a href="#" class="gh-reponav__item">Projects</a></li>
+      <li><a href="#" class="gh-reponav__item">Insights</a></li>
+    </ul>
+  </nav>
+
+  <main class="gh-main" id="start-of-content">
+    <!-- US-2.1: overview (title, author, branches, status) rendered here -->
+    <div class="pr-header" id="pr-header"></div>
+
+    <!-- PR sub-tabs (Conversation / Checks / Files changed) -->
+    <nav class="pr-tabs" aria-label="Pull request" id="pr-tabs"></nav>
+
+    <div class="pr-layout">
+      <section class="pr-content" aria-label="Pull request content" style="min-width:0">
+        <!-- Tab panels -->
+        <div data-panel="conversation"></div>
+        <div data-panel="files" hidden></div>
+        <div data-panel="checks" hidden></div>
+      </section>
+
+      <aside class="pr-sidebar" id="pr-sidebar" aria-label="Pull request metadata"></aside>
+    </div>
+  </main>
+
+  <footer class="gh-footer" role="contentinfo">
+    <div class="gh-footer__inner">
+      <span class="gh-footer__copy">© 2026 GitHub, Inc.</span>
+      <ul class="gh-footer__links">
+        <li><a href="#" class="link">Terms</a></li>
+        <li><a href="#" class="link">Privacy</a></li>
+        <li><a href="#" class="link">Docs</a></li>
+        <li><a href="#" class="link">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="auth.js"></script>
+  <script src="common.js"></script>
+  <script src="pr.js"></script>
+</body>
+</html>
